@@ -1,28 +1,30 @@
 {% set name = "patch" %}
 {% set version = "1.16" %}
-{% set sha256 = "c62073f356cff054c8ac24496f1a3d7cfa137835c31e9af39a9f5292fd75bd9f" %}
 
 package:
   name: python-{{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.zip
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
-  sha256: {{ sha256 }}
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.zip
+  sha256: c62073f356cff054c8ac24496f1a3d7cfa137835c31e9af39a9f5292fd75bd9f
 
 build:
   noarch: python
-  number: 0
-  script: python setup.py install
+  number: 1
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
-  build:
-    - python
+  host:
+    - python {{ python_min }}
+    - pip
+    - setuptools
   run:
-    - python
+    - python >={{ python_min }}
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - patch
 
